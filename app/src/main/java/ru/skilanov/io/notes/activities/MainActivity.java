@@ -1,6 +1,5 @@
-package ru.skilanov.io.notes;
+package ru.skilanov.io.notes.activities;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,15 +14,31 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ru.skilanov.io.notes.database.AppDatabase;
+import javax.inject.Inject;
+
+import ru.skilanov.io.notes.R;
+import ru.skilanov.io.notes.dataInjection.AppModule;
+import ru.skilanov.io.notes.dataInjection.DaggerAppComponent;
+import ru.skilanov.io.notes.dataInjection.RoomModule;
+import ru.skilanov.io.notes.database.NoteService;
 import ru.skilanov.io.notes.model.Note;
 
+
+/**
+ * Главная активность, отвечающая за отображение списка заметок.
+ */
 public class MainActivity extends AppCompatActivity {
-    //    List<Note> notes;
+    @Inject
+    public NoteService noteService;
     private FloatingActionButton mAddNoteFloatingActionButton;
     private RecyclerView mNotesRecyclerView;
     private RecyclerView.Adapter adapter;
 
+    /**
+     * Метод жизненного цикла активности, заполняющий activity_main и реализующий recycler view.
+     *
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,25 +46,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        notes = new ArrayList<>();
-//
-//        for (int i = 0; i < 10; i++) {
-//            Note note = new Note("test", "teeest");
-//            notes.add(note);
-//        }
-
-        AppDatabase dp = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "note").allowMainThreadQueries().build();
-
-        List<Note> notes = dp.noteDao().getAllNote();
+        DaggerAppComponent.builder()
+                .appModule(new AppModule(getApplication()))
+                .roomModule(new RoomModule(getApplication()))
+                .build()
+                .injectMainActivity(this);
 
         mNotesRecyclerView = findViewById(R.id.recycler_view_note_id);
         mNotesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NotesAdapter(notes);
+        adapter = new NotesAdapter(noteService.findAll());
         mNotesRecyclerView.setAdapter(adapter);
 
         mAddNoteFloatingActionButton = findViewById(R.id.add_note_floating_action_button_id);
         mAddNoteFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Метод запускает NoteActivity нажатием кнопки добавления заметки.
+             * @param v View
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
@@ -58,13 +71,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Класс адаптер, отвечает за передачу виджетов в recycler view.
+     */
     private class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesHolder> {
         List<Note> notes;
 
-        public NotesAdapter(List<Note> notes) {
+        /**
+         * Конструктор.
+         *
+         * @param notes список заметок.
+         */
+        NotesAdapter(List<Note> notes) {
             this.notes = notes;
         }
 
+        /**
+         * Создает и заполняет view NotesHolder.
+         *
+         * @param parent   ViewGroup
+         * @param viewType int
+         * @return заполненное view
+         */
         @Override
         public NotesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_row,
@@ -72,22 +100,41 @@ public class MainActivity extends AppCompatActivity {
             return new NotesHolder(view);
         }
 
+        /**
+         * Отвечает за связывание виджетов NotesHolder с позициями в recycler view.
+         *
+         * @param holder   NotesHolder
+         * @param position позиция в списке
+         */
         @Override
         public void onBindViewHolder(NotesHolder holder, int position) {
             holder.mTitleTextView.setText(notes.get(position).getTitle());
             holder.mDescriptionTextView.setText(notes.get(position).getDescription());
         }
 
+        /**
+         * Возвращает количество заметок.
+         *
+         * @return размер List<Note>
+         */
         @Override
         public int getItemCount() {
             return notes.size();
         }
 
+        /**
+         * Класс для хранения ссылок на виджеты.
+         */
         public class NotesHolder extends RecyclerView.ViewHolder {
             private TextView mTitleTextView;
             private TextView mDescriptionTextView;
 
-            public NotesHolder(View itemView) {
+            /**
+             * Конструктор.
+             *
+             * @param itemView View
+             */
+            private NotesHolder(View itemView) {
                 super(itemView);
 
                 mTitleTextView = itemView.findViewById(R.id.note_title_id);

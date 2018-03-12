@@ -7,9 +7,14 @@ import ru.skilanov.io.notes.model.Note;
 import ru.skilanov.io.notes.model.NoteDao;
 
 /**
- * Created by Semen on 12.03.2018.
+ * Абстратный класс базы данных.
  */
 @Database(entities = {Note.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase{
+public abstract class AppDatabase extends RoomDatabase {
+    /**
+     * Абстрантный метод dao.
+     *
+     * @return NoteDao
+     */
     public abstract NoteDao noteDao();
 }

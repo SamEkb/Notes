@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
- * Created by Semen on 12.03.2018.
+ * Класс модель, содержащий поля таблицы, а так же методы get и set.
  */
 
 @Entity
