@@ -1,6 +1,7 @@
 package ru.skilanov.io.notes.model;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -21,10 +22,27 @@ public interface NoteDao {
     List<Note> getAllNote();
 
     /**
+     * Метод выбора по id.
+     *
+     * @param id int
+     * @return Note
+     */
+    @Query("SELECT * FROM note WHERE id = :id")
+    Note getById(int id);
+
+    /**
      * Ввести новую заметку.
      *
      * @param note Note
      */
     @Insert
     void insert(Note note);
+
+    /**
+     * Метод удаления заметки.
+     *
+     * @param note Note
+     */
+    @Delete
+    void delete(Note note);
 }

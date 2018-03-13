@@ -37,5 +37,5 @@ public interface NoteService {
      * @param note Note
      * @return int
      */
-    int delete(Note note);
+    void delete(Note note);
 }

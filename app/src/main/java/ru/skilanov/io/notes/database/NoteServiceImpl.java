@@ -33,7 +33,7 @@ public class NoteServiceImpl implements NoteService {
      */
     @Override
     public Note findById(int id) {
-        return null;
+        return noteDao.getById(id);
     }
 
     /**
@@ -63,7 +63,7 @@ public class NoteServiceImpl implements NoteService {
      * @return int
      */
     @Override
-    public int delete(Note note) {
-        return 0;
+    public void delete(Note note) {
+        noteDao.delete(note);
     }
 }

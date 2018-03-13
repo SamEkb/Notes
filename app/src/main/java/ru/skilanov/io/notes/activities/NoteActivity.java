@@ -43,6 +43,8 @@ public class NoteActivity extends AppCompatActivity {
                 .roomModule(new RoomModule(getApplication()))
                 .build().injectNoteActivity(this);
 
+        getIncomingIntent();
+
         mTitle = findViewById(R.id.tetle_edit_id);
         mDescription = findViewById(R.id.description_edit_id);
         mSave = findViewById(R.id.save_button_id);
@@ -60,5 +62,30 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Метод проверяет и получает дополнительную информацию от  MainActivity.
+     */
+    public void getIncomingIntent() {
+        if (getIntent().hasExtra("noteTitle") && getIntent().hasExtra("noteDescription")) {
+            String titleIntent = getIntent().getStringExtra("noteTitle");
+            String descriptionIntent = getIntent().getStringExtra("noteDescription");
+
+            setEditTexts(titleIntent, descriptionIntent);
+        }
+    }
+
+    /**
+     * Задает текст для полученной дополнительной информации.
+     *
+     * @param title       String
+     * @param description String
+     */
+    private void setEditTexts(String title, String description) {
+        mTitle = findViewById(R.id.tetle_edit_id);
+        mTitle.setText(title);
+        mDescription = findViewById(R.id.description_edit_id);
+        mDescription.setText(description);
     }
 }

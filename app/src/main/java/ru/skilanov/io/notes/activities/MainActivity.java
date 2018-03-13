@@ -125,9 +125,11 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Класс для хранения ссылок на виджеты.
          */
-        public class NotesHolder extends RecyclerView.ViewHolder {
+        public class NotesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            int position = 0;
             private TextView mTitleTextView;
             private TextView mDescriptionTextView;
+            private Note note;
 
             /**
              * Конструктор.
@@ -136,9 +138,25 @@ public class MainActivity extends AppCompatActivity {
              */
             private NotesHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
 
                 mTitleTextView = itemView.findViewById(R.id.note_title_id);
                 mDescriptionTextView = itemView.findViewById(R.id.note_description_id);
+            }
+
+            /**
+             * Метод запускает другую активность и передает дополнительную информацию, после щелчка
+             * на заметку из писка recycler view.
+             *
+             * @param v View
+             */
+            @Override
+            public void onClick(View v) {
+                position = getAdapterPosition();
+                Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+                intent.putExtra("noteTitle", String.valueOf(notes.get(position).getTitle()));
+                intent.putExtra("noteDescription", String.valueOf(notes.get(position).getDescription()));
+                startActivity(intent);
             }
         }
     }
