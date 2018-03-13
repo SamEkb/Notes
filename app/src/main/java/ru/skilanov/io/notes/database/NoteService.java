@@ -34,8 +34,8 @@ public interface NoteService {
     /**
      * Удаляет заметку.
      *
-     * @param note Note
+     * @param id int
      * @return int
      */
-    void delete(Note note);
+    int delete(int id);
 }

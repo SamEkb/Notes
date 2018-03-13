@@ -27,6 +27,7 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTitle;
     private EditText mDescription;
     private Button mSave;
+    private Button mDelete;
 
     /**
      * Метод жизненного цикла заполняющий create_note
@@ -58,6 +59,20 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 noteService.insert(new Note(mTitle.getText().toString(), mDescription.getText().toString()));
+                startActivity(new Intent(NoteActivity.this, MainActivity.class));
+            }
+        });
+
+        mDelete = findViewById(R.id.delete_button_id);
+        mDelete.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Метод получает id, затем удаляет заметку из базы данных.
+             * @param v View
+             */
+            @Override
+            public void onClick(View v) {
+                int noteId = getIntent().getIntExtra("noteId", 0);
+                noteService.delete(noteId);
                 startActivity(new Intent(NoteActivity.this, MainActivity.class));
             }
         });

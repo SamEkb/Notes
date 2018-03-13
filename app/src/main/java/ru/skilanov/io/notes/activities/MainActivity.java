@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 position = getAdapterPosition();
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+                intent.putExtra("noteId", notes.get(position).getId());
                 intent.putExtra("noteTitle", String.valueOf(notes.get(position).getTitle()));
                 intent.putExtra("noteDescription", String.valueOf(notes.get(position).getDescription()));
                 startActivity(intent);

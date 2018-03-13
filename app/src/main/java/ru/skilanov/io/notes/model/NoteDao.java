@@ -41,8 +41,8 @@ public interface NoteDao {
     /**
      * Метод удаления заметки.
      *
-     * @param note Note
+     * @param id int
      */
-    @Delete
-    void delete(Note note);
+    @Query("DELETE FROM note WHERE id = :id")
+    int delete(int id);
 }

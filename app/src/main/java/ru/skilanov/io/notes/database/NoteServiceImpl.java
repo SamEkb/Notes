@@ -59,11 +59,11 @@ public class NoteServiceImpl implements NoteService {
     /**
      * Удаляет заметку.
      *
-     * @param note Note
+     * @param id int
      * @return int
      */
     @Override
-    public void delete(Note note) {
-        noteDao.delete(note);
+    public int delete(int id) {
+        return noteDao.delete(id);
     }
 }
