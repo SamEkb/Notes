@@ -10,3 +10,5 @@ Android project
 2. Dagger2
 
 3. Room persistence library
+
+4. XML-Drawable и 9-Patch
